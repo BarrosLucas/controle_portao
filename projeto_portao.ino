@@ -5,8 +5,6 @@
 
 #define pin_button 11
 
-Serial mySerial; //Funcionalidade serial
-PrintWriter output; //Funcionalidade de escrita em arquivos
 
 int enB = 3;
 int in3 = 5;
@@ -48,9 +46,6 @@ Ultrasonic ultrasonic(pin_trigger, pin_echo);
  
 void setup(){
   Serial.begin(9600);
-
-  String portName = Serial.list()[0]; //configura a porta serial
-  mySerial = new Serial(this, portName, 9600);
 
   pinMode(pin_button, INPUT);
   pinMode(enB, OUTPUT);
