@@ -82,6 +82,7 @@ void moving_gate(){
         moveToForward(speed_slow);
         if(getGateDistance() <= distance_open){
           current_state = OPEN;
+          stopMotor();
         }
         break;
       case CLOSING_1:
@@ -100,30 +101,35 @@ void moving_gate(){
         moveToBackward(speed_slow);
         if(getGateDistance() >= distance_close){
           current_state = CLOSE;
+          stopMotor();
         }
         break;
       case TO_OPEN_1:
         moveToForward(speed_very_slow);
         if(getGateDistance() <= distance_1){
           current_state = OPEN_1;
+          stopMotor();
         }
         break;
       case TO_OPEN_2:
         moveToForward(speed_very_slow);
         if(getGateDistance() <= distance_2){
           current_state = OPEN_2;
+          stopMotor();
         }
         break;
       case TO_CLOSE_1:
         moveToBackward(speed_very_slow);
         if(getGateDistance() >= distance_2){
           current_state = CLOSE_1;
+          stopMotor();
         }
         break;
       case TO_CLOSE_2:
         moveToBackward(speed_very_slow);
         if(getGateDistance() >= distance_1){
           current_state = CLOSE_2;
+          stopMotor();
         }
         break;
   }
@@ -199,14 +205,16 @@ void moveToBackward(int speed_motor){
   digitalWrite(in3, HIGH);
   digitalWrite(in4, LOW);
   delay(100);
-  digitalWrite(in3, LOW);
-  digitalWrite(in4, LOW);
 }
 void moveToForward(int speed_motor){
   analogWrite(enB, speed_motor);
   digitalWrite(in3, LOW);
   digitalWrite(in4, HIGH);
   delay(100);
+}
+
+void stopMotor(){
+  analogWrite(enB, 0);
   digitalWrite(in3, LOW);
   digitalWrite(in4, LOW);
 }
