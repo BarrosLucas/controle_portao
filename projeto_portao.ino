@@ -3,7 +3,7 @@
 #define pin_trigger 9
 #define pin_echo 10
 
-#define pin_button 11
+#define pin_button 2
 
 Serial mySerial; //Funcionalidade serial
 PrintWriter output; //Funcionalidade de escrita em arquivos
@@ -52,7 +52,12 @@ void setup(){
   String portName = Serial.list()[0]; //configura a porta serial
   mySerial = new Serial(this, portName, 9600);
 
-  pinMode(pin_button, INPUT);
+
+  /**
+    RISING botao: 0 -> 1
+    FALLING botao: 1 -> 0
+  */
+  attachInterrupt(digitalPinToInterrupt(pin_button), changeState, RISING);
   pinMode(enB, OUTPUT);
   pinMode(in3, OUTPUT);
   pinMode(in4, OUTPUT);
@@ -128,26 +133,13 @@ void moving_gate(){
         break;
   }
 }
- 
-void loop(){
-  Serial.println(getGateDistance()*10);
-  delay(20);
-  //Serial.println("State before moving: ");
-  //Serial.println(current_state);
-  /*
-  Espera o botão ser pressionado
-  */
-  if(digitalRead(pin_button)){
-    /*
-    Espera o botão parar de ser pressionado
-    */
-    while(digitalRead(pin_button)){}
 
-    Serial.println("Button pressed!");
-    /*
-    Verifica o estado atual do portão e atualiza
-    */
-    switch(current_state){
+/**
+  Função ativada pela interrupção do botão
+*/
+void changeState() {
+  Serial.println("Button pressed!");
+  switch(current_state){
       case OPEN:
         current_state = CLOSING_1;
         break;
@@ -185,7 +177,14 @@ void loop(){
       default:
         break;
     }
-  }
+}
+ 
+void loop(){
+  Serial.println(getGateDistance()*10);
+  delay(20);
+  //Serial.println("State before moving: ");
+  //Serial.println(current_state);
+
   //Serial.println("State after set states: ");
   //Serial.println(current_state);
   moving_gate();
